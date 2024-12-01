@@ -4,17 +4,22 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-	"sort"
 	"strconv"
 	"strings"
 )
 
-func abs(number int) int{
-    if number >= 0{
-        return number
+func find_frequency( list []int)map[int]int{
+    m := make(map[int]int)
+    if len(list) == 0 {
+        return m
     }
-    return -number
+    for _, element := range list {
+        m[element] += 1
+    }
+    return m
 }
+
+
 
 func main() {
     list1 := []int {}
@@ -24,6 +29,7 @@ func main() {
         fmt.Printf("Error reading the file: %e", err)
         return
     }
+
     defer file.Close()
 
     scanner:= bufio.NewScanner(file)
@@ -48,11 +54,10 @@ func main() {
         list2 = append(list2, number2)
 
     }
-        sort.Ints(list1)
-        sort.Ints(list2)
-        for i := range list1{
-            distance += abs(list1[i] - list2[i])
-        }
+    m := find_frequency(list2)
+    for _, element := range list1{
+        distance += element * m[element]
+    }
     fmt.Println(distance)
 }
 
