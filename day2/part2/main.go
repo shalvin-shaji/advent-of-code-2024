@@ -31,6 +31,21 @@ func isIncreasing(intlist []int) bool {
 	return true
 }
 
+func isSafe(intlist []int) bool {
+	if len(intlist) < 1 {
+		return false
+	}
+	if !isIncreasing(intlist) && !isDecreasing(intlist) {
+		return false
+	}
+	for i := 1; i < len(intlist); i++ {
+		diff := abs(intlist[i] - intlist[i-1])
+		if diff < 1 || diff > 3 {
+			return false
+		}
+	}
+	return true
+}
 func isSafeAbs(intlist []int) bool {
 	if len(intlist) < 1 {
 		return false
@@ -53,21 +68,6 @@ func isSafeAbs(intlist []int) bool {
 	return decreasing || increasing
 }
 
-func isSafe(intlist []int) bool {
-	if len(intlist) < 1 {
-		return false
-	}
-	if !isIncreasing(intlist) && !isDecreasing(intlist) {
-		return false
-	}
-	for i := 1; i < len(intlist); i++ {
-		diff := abs(intlist[i] - intlist[i-1])
-		if diff < 1 || diff > 3 {
-			return false
-		}
-	}
-	return true
-}
 func main() {
 	file, err := os.Open("input.txt")
 	if err != nil {
@@ -91,10 +91,21 @@ func main() {
 			}
 			intlist = append(intlist, integer)
 		}
-
 		if isSafeAbs(intlist) {
 			count++
+			continue
 		}
+		for i := 0; i < len(intlist); i++ {
+			sliced_list := append([]int{}, intlist[:i]...)
+			sliced_list = append(sliced_list, intlist[i+1:]...)
+			fmt.Printf("In Option %x\n", sliced_list)
+			if isSafeAbs(sliced_list) {
+				fmt.Printf("Safe %x - %x \n", intlist, sliced_list)
+				count++
+				break
+			}
+		}
+
 	}
 	fmt.Println(count)
 }
